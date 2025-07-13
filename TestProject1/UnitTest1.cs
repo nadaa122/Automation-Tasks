@@ -65,7 +65,7 @@ namespace TestProject1
             IWebElement lastNameField = driver.FindElement(By.Id("u_0_o"));
             lastNameField.SendKeys("Doe");
             IWebElement emailField = driver.FindElement(By.Id("u_0_r"));
-
-        }
-    }
+            
+        } 
+    } 
 }
