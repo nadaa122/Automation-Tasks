@@ -9,19 +9,15 @@ namespace TestProject1
     {
         WebDriver driver;
         WebDriverWait wait;
+      
+
         [Test]
-        public void Testcase2()
+        public void Application()
         {
             driver = new ChromeDriver();
             driver.Manage().Window.Maximize();
             driver.Navigate().GoToUrl("https://www.dummyticket.com/dummy-ticket-for-visa-application/");
 
-            Application();
-          
-
-        }
-        public void Application()
-        {
             driver.FindElement(By.Name("travname")).SendKeys("Nada");
             driver.FindElement(By.Name("travlastname")).SendKeys("Nasr");
             driver.FindElement(By.Id("dob")).Click();
@@ -205,20 +201,37 @@ namespace TestProject1
         }
 
         [Test]
-        public void Frames()
+        public void nestedFrames()
         {
             driver = new ChromeDriver();
             driver.Manage().Window.Maximize();
-            driver.Navigate().GoToUrl("https://the-internet.herokuapp.com/iframe");
+            driver.Navigate().GoToUrl("https://the-internet.herokuapp.com/nested_frames");
 
-            // how to find a frame on the page
+            driver.SwitchTo().Frame("frame-top");
 
-            // Switch to the frame using its ID
-            driver.SwitchTo().Frame("mce_0_ifr");
-            // Perform actions within the frame
-            IWebElement contentArea = driver.FindElement(By.Id("mce_0"));
+            driver.SwitchTo().Frame("frame-left");
+            Console.WriteLine("Left Frame: " + driver.FindElement(By.TagName("body")).Text);
+
+            driver.SwitchTo().ParentFrame();
+
+            driver.SwitchTo().Frame("frame-middle");
+            Console.WriteLine("Middle Frame: " + driver.FindElement(By.Id("content")).Text);
+
+            driver.SwitchTo().ParentFrame();
+
+            driver.SwitchTo().Frame("frame-right");
+            Console.WriteLine("Right Frame: " + driver.FindElement(By.TagName("body")).Text);
+
+            driver.SwitchTo().DefaultContent();
+
+           
+            driver.SwitchTo().Frame("frame-bottom");
+            Console.WriteLine("Bottom Frame: " + driver.FindElement(By.TagName("body")).Text);
+
+            driver.Quit();
 
         }
 
+
     }
-    }
+}
