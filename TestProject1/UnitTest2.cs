@@ -17,14 +17,13 @@ namespace TestProject1
             driver.Navigate().GoToUrl("https://www.dummyticket.com/dummy-ticket-for-visa-application/");
 
             Application();
-            fileUpload();
-
+          
 
         }
         public void Application()
         {
-            driver.FindElement(By.Name("travname")).SendKeys("nada");
-            driver.FindElement(By.Name("travlastname")).SendKeys("nasr");
+            driver.FindElement(By.Name("travname")).SendKeys("Nada");
+            driver.FindElement(By.Name("travlastname")).SendKeys("Nasr");
             driver.FindElement(By.Id("dob")).Click();
 
             // how to select date from date picker??
@@ -145,18 +144,18 @@ namespace TestProject1
         public void shadowDOM()
         {
             driver = new ChromeDriver();
-            driver.Navigate().GoToUrl("https://the-internet.herokuapp.com/shadowdom");
+            driver.Manage().Window.Maximize();
+            driver.Navigate().GoToUrl("https://books-pwakit.appspot.com/");
+
+
 
             // Accessing Shadow DOM elements
-            IWebElement shadowHost = driver.FindElement(By.CssSelector("div#shadow-host"));
+             driver.FindElement(By.CssSelector("[apptitle='BOOKS']"))
+                .GetShadowRoot()
+                .FindElement(By.CssSelector("[id='input']"))
+                .SendKeys("Test");
 
-            IJavaScriptExecutor js = (IJavaScriptExecutor)driver;
-            IWebElement shadowRoot = (IWebElement)js.ExecuteScript("return arguments[0].shadowRoot", shadowHost);
-            IWebElement shadowButton = driver.FindElement(By.TagName("my-paragraph"));
-            IWebElement webElement = shadowRoot.FindElement(By.CssSelector("[name='my-text']"));
-            // Perform actions on the shadow DOM element
-            shadowButton.Click();
-            Console.WriteLine("Shadow DOM: " + webElement);
+   
             driver.Quit();
         }
 
@@ -172,10 +171,52 @@ namespace TestProject1
             wait.Until(drv => drv.FindElement(By.CssSelector("#finish h4")).Displayed);
             string text = driver.FindElement(By.CssSelector("#finish h4")).Text;
             Console.WriteLine("Test: " + text);
-            
+
             driver.Quit();
+        }
+
+        [Test]
+        public void handelingWindows()
+        {
             driver = new ChromeDriver();
+            driver.Manage().Window.Maximize();
             driver.Navigate().GoToUrl("https://the-internet.herokuapp.com/windows");
+
+            driver.FindElement(By.LinkText("Click Here")).Click();
+
+            IWebElement results = driver.FindElement(By.TagName("h3"));
+
+            string actualResults = results.Text;
+            string expectedResults = "Opening a new window";
+            if (actualResults == expectedResults)
+            {
+                Console.WriteLine("Test Passed");
+            }
+            else
+            {
+                Console.WriteLine("Test Failed");
+            }
+
+            Console.WriteLine("Results: " + actualResults);
+
+            // Switch to the previous window
+            driver.SwitchTo().Window(driver.WindowHandles[0]);
+            driver.Quit();
+        }
+
+        [Test]
+        public void Frames()
+        {
+            driver = new ChromeDriver();
+            driver.Manage().Window.Maximize();
+            driver.Navigate().GoToUrl("https://the-internet.herokuapp.com/iframe");
+
+            // how to find a frame on the page
+
+            // Switch to the frame using its ID
+            driver.SwitchTo().Frame("mce_0_ifr");
+            // Perform actions within the frame
+            IWebElement contentArea = driver.FindElement(By.Id("mce_0"));
 
         }
 
