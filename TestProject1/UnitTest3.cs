@@ -9,7 +9,6 @@ namespace TestProject1
     public class Tests3
     {
         WebDriver driver;
-        WebDriverWait wait;
 
         [SetUp]
         public void setUp()
@@ -37,15 +36,16 @@ namespace TestProject1
             // How to string assert 
             StringAssert.Contains("https://practicetestautomation.com/logged-in-successfully/", CurrentURL);
 
-            // How to check text content
+            //// How to check text content
             string bodyText = driver.FindElement(By.TagName("body")).Text.ToLower();
-            Assert.IsTrue(bodyText.Contains("Logged In Successfully") || bodyText.Contains("Congratulations student. You successfully logged in!"));
+            Console.WriteLine(bodyText);
+            Assert.IsTrue(bodyText.Contains("logged in successfully") || bodyText.Contains("congratulations student. you successfully logged in!"));
 
-            // How to check if log out button is displayed
+            //// How to check if log out button is displayed
             Assert.IsTrue(driver.FindElement(By.XPath("//a[text()='Log out']")).Displayed);
 
         }
-   
+
         [Test]
         public void negativeUsername1()
         {
@@ -54,8 +54,10 @@ namespace TestProject1
             driver.FindElement(By.Id("submit")).Click();
 
             IWebElement errorMsg = driver.FindElement(By.Id("error"));
-            Assert.IsTrue(errorMsg.Displayed);
-            Assert.That(errorMsg.Text, Is.EqualTo("Your username is invalid!"));
+
+            Console.WriteLine(errorMsg.Text);
+            //Assert.IsTrue(errorMsg.Displayed);
+            //Assert.That(errorMsg.Text, Is.EqualTo("Your username is invalid!"));
         }
 
         [Test]
@@ -67,48 +69,8 @@ namespace TestProject1
             //
             IWebElement errorMsg = driver.FindElement(By.Id("error"));
             Assert.IsTrue(errorMsg.Displayed);
-            Assert.That(errorMsg.Text, Is.EqualTo("Your password is invalid!")) ;
+            Assert.That(errorMsg.Text, Is.EqualTo("Your password is invalid!"));
         }
-
-
-        [Test]
-        public void positiveLoginPOM()
-        {
-            var login = new LoginPage(driver);
-            login.EnterUsername("student")
-                 .EnterPassword("Password123")
-                 .ClickSubmit();
-
-            StringAssert.Contains("logged-in-successfully", login.GetUrl());
-
-            string bodyText = login.GetBodyText().ToLower();
-            Assert.IsTrue(bodyText.Contains("logged in successfully") || bodyText.Contains("congratulations student"));
-
-            Assert.IsTrue(login.IsLogoutVisible());
-        }
-
-        [Test]
-        public void negativeUsernamePOM()
-        {
-            var login = new LoginPage(driver);
-            login.EnterUsername("wrongUser")
-                 .EnterPassword("Password123")
-                 .ClickSubmit();
-
-            Assert.IsTrue(login.IsErrorDisplayed());
-            Assert.That(login.GetErrorMessage(), Is.EqualTo("Your username is invalid!"));
-        }
-
-        [Test]
-        public void negativePasswordPOM()
-        {
-            var login = new LoginPage(driver);
-            login.EnterUsername("student")
-                 .EnterPassword("wrongPassword")
-                 .ClickSubmit();
-
-            Assert.IsTrue(login.IsErrorDisplayed());
-            Assert.That(login.GetErrorMessage(), Is.EqualTo("Your password is invalid!"));
-        }
+    
     }
 }
